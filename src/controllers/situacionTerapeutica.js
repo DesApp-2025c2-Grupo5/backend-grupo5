@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const SituacionTerapeutica = require('../models/situacionTerapeutica')
 const Socio = require('../models/socio')
 const Prestador = require('../models/prestador')
@@ -124,23 +125,41 @@ exports.agregarNovedad = async (req, res) => {
 
 exports.createSituacionTerapeutica = async (req, res) => {
   try {
-    const socio = await Socio.findOne({ dni: req.body.dniAfiliado });
+    const { dniAfiliado, prestador: prestadorIdentifier } = req.body;
+
+    console.log("DEBUG: Buscando prestador con el identificador:", prestadorIdentifier);
+
+    const socioQueryParts = [{ dni: dniAfiliado }];
+    if (mongoose.Types.ObjectId.isValid(dniAfiliado)) {
+      socioQueryParts.push({ _id: dniAfiliado });
+    }
+    const socio = await Socio.findOne({ $or: socioQueryParts });
+
     if (!socio) {
-      return res.status(404).json({ message: 'Socio no encontrado' });
+      return res.status(404).json({ message: "Socio no encontrado" });
     }
     req.body.socio = socio._id;
-    const prestador = await Prestador.findById(req.body.prestador);
+
+    const prestadorQueryParts = [
+        { cuit: prestadorIdentifier },
+        { matricula: prestadorIdentifier }
+    ];
+    if (mongoose.Types.ObjectId.isValid(prestadorIdentifier)) {
+      prestadorQueryParts.push({ _id: prestadorIdentifier });
+    }
+    const prestador = await Prestador.findOne({ $or: prestadorQueryParts });
+
     if (!prestador) {
-      return res.status(404).json({ message: 'Prestador no encontrado' });
+      return res.status(404).json({ message: "Prestador no encontrado" });
     }
     req.body.prestador = prestador._id;
 
     const situacion = await SituacionTerapeutica.create(req.body);
-    res.status(201).json(situacion);
+    res.status(201).json({ message: 'Situación terapéutica creada con éxito', situacion });
   } catch (error) {
-    console.error('Error al crear la situación terapéutica:', error);
-    res.status(500).json({ 
-      message: error.message || "Error interno del servidor"
+    console.error("Error al crear la situación terapéutica:", error);
+    res.status(500).json({
+      message: error.message || "Error interno del servidor",
     });
   }
 };
