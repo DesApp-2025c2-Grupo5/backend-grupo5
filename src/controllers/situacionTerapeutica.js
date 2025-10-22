@@ -105,7 +105,7 @@ exports.agregarNovedad = async (req, res) => {
     
     const situacion = await SituacionTerapeutica.findByIdAndUpdate(
       situacionTerapeuticaId,
-      { $push: { novedadesMedicas: { nota } } },
+      { $push: { novedadesMedicas: { nota, prestador: {_id: req.prestador._id, nombres: req.prestador.nombres, apellidos: req.prestador.apellidos, especialidad: req.prestador.especialidad, cuit: req.prestador.cuit, matricula: req.prestador.matricula, es_centro_medico: req.prestador.es_centro_medico   } } } },
       { new: true, runValidators: true }
     )
       .populate('socio')
@@ -139,21 +139,7 @@ exports.createSituacionTerapeutica = async (req, res) => {
       return res.status(404).json({ message: "Socio no encontrado" });
     }
     req.body.socio = socio._id;
-
-    const prestadorQueryParts = [
-        { cuit: prestadorIdentifier },
-        { matricula: prestadorIdentifier }
-    ];
-    if (mongoose.Types.ObjectId.isValid(prestadorIdentifier)) {
-      prestadorQueryParts.push({ _id: prestadorIdentifier });
-    }
-    const prestador = await Prestador.findOne({ $or: prestadorQueryParts });
-
-    if (!prestador) {
-      return res.status(404).json({ message: "Prestador no encontrado" });
-    }
-    req.body.prestador = prestador._id;
-
+    req.body.prestador = req.prestador._id;
     const situacion = await SituacionTerapeutica.create(req.body);
     res.status(201).json({ message: 'Situación terapéutica creada con éxito', situacion });
   } catch (error) {
