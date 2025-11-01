@@ -18,6 +18,11 @@ const historiaClinicaSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
+    sede: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: false,
+      ref: "Sede",
+    },
 
     // ===== ANTECEDENTES PATOLÓGICOS PERSONALES =====
     antecedentes_patologicos: [
