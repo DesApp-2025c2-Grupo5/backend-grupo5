@@ -6,7 +6,7 @@ dotenv.config();
 
 // Importar modelo
 const PrestadorModel = require("../models/prestador");
-
+const CentroMedicoModel = require("../models/centroMedico");
 // Datos para generar prestadores
 const especialidades = [
   "Cardiología",
@@ -343,6 +343,40 @@ function generarPrestadores(cantidad) {
   return prestadores;
 }
 
+function generarCentrosMedicos(cantidad) {
+    const centrosMedicos = [];
+    const cuitsUsados = new Set();
+    
+    for (let i = 0; i < cantidad; i++) {
+        let cuit;
+
+        // Generar CUIT único
+        do {
+            cuit = generarCUIT();
+        } while (cuitsUsados.has(cuit));
+        cuitsUsados.add(cuit);
+
+        const nombreClinica = nombresClinicas[i % nombresClinicas.length]; // Cicla a través de los nombres
+        const clinicaCorta = nombreClinica.toLowerCase().replace(/\s+/g, "").replace(/clínica|sanatorio|centro|hospital|instituto/gi, "");
+
+        const centro = {
+            nombre: nombreClinica,
+            cuit: cuit,
+            email: `info@${clinicaCorta}.com.ar`,
+            telefono: generarTelefono(),
+            direccion: generarDireccion(),
+            ciudad: ciudades[Math.floor(Math.random() * ciudades.length)],
+            provincia: provincias[Math.floor(Math.random() * provincias.length)],
+            password: generarPassword(),
+            estado: "Activo",
+            // sedes: [], // Dejar vacío si el modelo de Sede no existe aún
+        };
+
+        centrosMedicos.push(centro);
+    }
+    return centrosMedicos;
+}
+
 // Función principal
 async function poblarPrestadores() {
   try {
@@ -357,11 +391,14 @@ async function poblarPrestadores() {
     // Limpiar colección existente (opcional)
     console.log("🧹 Limpiando colección de prestadores...");
     await PrestadorModel.deleteMany({});
-
+    await CentroMedicoModel.deleteMany({})
     // Generar prestadores
     const cantidadPrestadores = 30;
     console.log(`🏥 Generando ${cantidadPrestadores} prestadores...`);
     const prestadores = generarPrestadores(cantidadPrestadores);
+    const cantidadCentros = 7;
+    console.log(`🏢 Generando ${cantidadCentros} Centros Médicos...`);
+    const centros = generarCentrosMedicos(cantidadCentros);
 
     // Crear prestadores en la base de datos
     for (let i = 0; i < prestadores.length; i++) {
@@ -377,6 +414,12 @@ async function poblarPrestadores() {
         `✅ ${tipo} creado: ${nombreCompleto} - [${especialidadesStr}] (CUIT: ${prestadorCreado.cuit})`
       );
     }
+    for (const centro of centros) {
+            const centroCreado = await CentroMedicoModel.create(centro);
+            console.log(
+                `✅ Centro Creado: ${centroCreado.nombre} (CUIT: ${centroCreado.cuit})`
+            );
+        }
 
     console.log(`\n🎉 ¡Proceso completado exitosamente!`);
     console.log(`📊 Se crearon ${cantidadPrestadores} prestadores.`);

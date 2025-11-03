@@ -15,6 +15,7 @@ const prestadorRoutes = require("./routes/prestador");
 const { verifyTokenMiddleware } = require("./middlewares/authMiddleware");
 const turnosRoutes = require("./routes/turnos");
 const sedesRoutes = require("./routes/sedes");
+const centroMedicoRoutes = require("./routes/centroMedico");
 
 // Importar modelos para registrarlos
 require("./models/socio");
@@ -25,6 +26,7 @@ require("./models/sede");
 require("./models/situacionTerapeutica");
 require("./models/filtroSolicitudes");
 require("./models/solicitud");
+require("./models/centroMedico");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -56,6 +58,7 @@ app.use("/solicitud", verifyTokenMiddleware, solicitudRoutes);
 app.use("/prestador", prestadorRoutes); // no necesita authToken porque es para el login
 app.use("/turnos", turnosRoutes);
 app.use("/sedes", sedesRoutes);
+app.use("/centroMedico", centroMedicoRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
