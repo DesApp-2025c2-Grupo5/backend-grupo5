@@ -21,6 +21,12 @@ const TurnoSchema = new Schema({
   paciente_nombre: { type: String },   // opcional
   paciente_apellido: { type: String }, // opcional
 
+  sede: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Sede",
+          required: false, //Cambiar a true cuando esté todo, ahora está así para que no rompa
+        },
+
   notas: [NotaSchema],
 }, { timestamps: true });
 
