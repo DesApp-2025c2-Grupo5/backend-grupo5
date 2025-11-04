@@ -55,16 +55,7 @@ const prestadorSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  es_centro_medico: {
-    type: Boolean,
-    default: false,
-  },
-  // Si es centro médico: sedes que posee
-  sedes: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Sede",
-  }],
-  // Si es médico: sedes donde trabaja
+   // Si es médico: sedes donde trabaja
   sedes_trabajo: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Sede",
@@ -82,6 +73,18 @@ const prestadorSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+
+  //DESCOMENTAR PARA QUE FUNCIONE LA PANTALLA TURNOS
+  // es_centro_medico: {
+  //   type: Boolean,
+  //   default: false,
+  // },
+  //   // Sedes que posee
+  // sedes: [{
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "Sede",
+  // }],
+ 
 });
 
 const PrestadorModel = mongoose.model("Prestador", prestadorSchema);
