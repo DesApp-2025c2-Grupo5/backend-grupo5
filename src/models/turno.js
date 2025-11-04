@@ -1,5 +1,6 @@
 const { Schema, model, Types } = require("mongoose");
 
+
 const NotaSchema = new Schema({
   ts: { type: Date, default: Date.now },
   texto: { type: String, required: true },
@@ -22,7 +23,7 @@ const TurnoSchema = new Schema({
   paciente_apellido: { type: String }, // opcional
 
   sede: {
-          type: mongoose.Schema.Types.ObjectId,
+          type: Schema.Types.ObjectId,
           ref: "Sede",
           required: false, //Cambiar a true cuando esté todo, ahora está así para que no rompa
         },
