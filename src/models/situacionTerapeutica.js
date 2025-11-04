@@ -19,6 +19,11 @@ const SituacionTerapeuticaSchema = new mongoose.Schema({
     type: String, 
     required: true 
   },
+  sede: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+         required: false, //Cambiar a true cuando se cree la variable globarl, ahora está así para que no rompa cuando se crea una nueva
+      },
   fechaInicio: { 
     type: Date, 
     default: Date.now 

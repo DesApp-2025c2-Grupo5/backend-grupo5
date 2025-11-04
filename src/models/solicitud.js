@@ -62,6 +62,11 @@ const SolicitudSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    sede: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "Sede",
+        },
 }, {
     timestamps: true
 });
