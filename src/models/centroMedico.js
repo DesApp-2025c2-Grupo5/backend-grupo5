@@ -47,6 +47,10 @@ const centroMedicoSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    sedes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Sede",
+      }]
 });
 
 const CentroMedicoModel = mongoose.model("CentroMedico", centroMedicoSchema);
