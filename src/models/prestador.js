@@ -59,6 +59,10 @@ const prestadorSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  medicosQueTrabajan: [{ 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Prestador", 
+  }],
   // Si es centro médico: sedes que posee
   sedes: [{
     type: mongoose.Schema.Types.ObjectId,

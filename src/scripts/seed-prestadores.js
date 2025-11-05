@@ -4,10 +4,14 @@ const dotenv = require("dotenv");
 // Configurar dotenv
 dotenv.config();
 
-// Importar modelo
+// Importar modelos
 const PrestadorModel = require("../models/prestador");
+const SedeModel = require("../models/sede"); // Se asume que el modelo Sede está en ../models/sede
 
-// Datos para generar prestadores
+// =========================================================================
+// DATOS ESTÁTICOS Y FUNCIONES DE GENERACIÓN
+// =========================================================================
+
 const especialidades = [
   "Cardiología",
   "Dermatología",
@@ -32,172 +36,48 @@ const especialidades = [
 ];
 
 const nombres = [
-  "Carlos",
-  "María",
-  "Juan",
-  "Ana",
-  "Roberto",
-  "Patricia",
-  "José",
-  "Laura",
-  "Luis",
-  "Carmen",
-  "Miguel",
-  "Isabel",
-  "Antonio",
-  "Teresa",
-  "Francisco",
-  "Rosa",
-  "Alejandro",
-  "Mónica",
-  "Rafael",
-  "Elena",
-  "Fernando",
-  "Silvia",
-  "Eduardo",
-  "Pilar",
-  "Jorge",
-  "Mercedes",
-  "Diego",
-  "Esperanza",
-  "Alberto",
-  "Gloria",
-  "Sergio",
-  "Beatriz",
-  "Raúl",
-  "Dolores",
-  "Andrés",
-  "Cristina",
-  "Javier",
-  "Amparo",
-  "Óscar",
-  "Remedios",
+  "Carlos", "María", "Juan", "Ana", "Roberto", "Patricia", "José", "Laura", "Luis",
+  "Carmen", "Miguel", "Isabel", "Antonio", "Teresa", "Francisco", "Rosa", "Alejandro",
+  "Mónica", "Rafael", "Elena", "Fernando", "Silvia", "Eduardo", "Pilar", "Jorge",
+  "Mercedes", "Diego", "Esperanza", "Alberto", "Gloria", "Sergio", "Beatriz",
+  "Raúl", "Dolores", "Andrés", "Cristina", "Javier", "Amparo", "Óscar", "Remedios",
 ];
 
 const apellidos = [
-  "García",
-  "Rodríguez",
-  "González",
-  "Fernández",
-  "López",
-  "Martínez",
-  "Sánchez",
-  "Pérez",
-  "Gómez",
-  "Martín",
-  "Jiménez",
-  "Ruiz",
-  "Hernández",
-  "Díaz",
-  "Moreno",
-  "Muñoz",
-  "Álvarez",
-  "Romero",
-  "Alonso",
-  "Gutiérrez",
-  "Navarro",
-  "Torres",
-  "Domínguez",
-  "Vázquez",
-  "Ramos",
-  "Gil",
-  "Ramírez",
-  "Serrano",
-  "Blanco",
-  "Suárez",
-  "Molina",
-  "Morales",
-  "Ortega",
-  "Delgado",
-  "Castro",
-  "Ortiz",
-  "Rubio",
-  "Marín",
-  "Sanz",
-  "Iglesias",
+  "García", "Rodríguez", "González", "Fernández", "López", "Martínez", "Sánchez",
+  "Pérez", "Gómez", "Martín", "Jiménez", "Ruiz", "Hernández", "Díaz", "Moreno",
+  "Muñoz", "Álvarez", "Romero", "Alonso", "Gutiérrez", "Navarro", "Torres",
+  "Domínguez", "Vázquez", "Ramos", "Gil", "Ramírez", "Serrano", "Blanco", "Suárez",
+  "Molina", "Morales", "Ortega", "Delgado", "Castro", "Ortiz", "Rubio", "Marín",
+  "Sanz", "Iglesias",
 ];
 
 const ciudades = [
-  "Buenos Aires",
-  "Córdoba",
-  "Rosario",
-  "Mendoza",
-  "La Plata",
-  "Tucumán",
-  "Mar del Plata",
-  "Salta",
-  "Santa Fe",
-  "San Juan",
-  "Resistencia",
-  "Neuquén",
-  "Santiago del Estero",
-  "Corrientes",
-  "Posadas",
+  "Buenos Aires", "Córdoba", "Rosario", "Mendoza", "La Plata", "Tucumán", "Mar del Plata",
+  "Salta", "Santa Fe", "San Juan", "Resistencia", "Neuquén", "Santiago del Estero",
+  "Corrientes", "Posadas",
 ];
 
 const provincias = [
-  "Buenos Aires",
-  "Córdoba",
-  "Santa Fe",
-  "Mendoza",
-  "Tucumán",
-  "Salta",
-  "Entre Ríos",
-  "Misiones",
-  "Chaco",
-  "San Juan",
-  "Jujuy",
-  "Río Negro",
-  "Neuquén",
-  "Chubut",
-  "Santa Cruz",
-  "Tierra del Fuego",
-  "La Pampa",
-  "Santiago del Estero",
-  "Corrientes",
-  "Catamarca",
-  "La Rioja",
-  "Formosa",
+  "Buenos Aires", "Córdoba", "Santa Fe", "Mendoza", "Tucumán", "Salta", "Entre Ríos",
+  "Misiones", "Chaco", "San Juan", "Jujuy", "Río Negro", "Neuquén", "Chubut",
+  "Santa Cruz", "Tierra del Fuego", "La Pampa", "Santiago del Estero",
+  "Corrientes", "Catamarca", "La Rioja", "Formosa",
 ];
 
 const calles = [
-  "Av. Corrientes",
-  "San Martín",
-  "Belgrano",
-  "Rivadavia",
-  "Mitre",
-  "Sarmiento",
-  "Alsina",
-  "Moreno",
-  "Urquiza",
-  "Av. 9 de Julio",
-  "Independencia",
-  "25 de Mayo",
-  "Alem",
-  "Pellegrini",
-  "Maipú",
-  "Tucumán",
-  "Santa Fe",
-  "Córdoba",
+  "Av. Corrientes", "San Martín", "Belgrano", "Rivadavia", "Mitre", "Sarmiento",
+  "Alsina", "Moreno", "Urquiza", "Av. 9 de Julio", "Independencia", "25 de Mayo",
+  "Alem", "Pellegrini", "Maipú", "Tucumán", "Santa Fe", "Córdoba",
 ];
 
-// Nombres de clínicas y centros médicos
 const nombresClinicas = [
-  "Clínica Mitre",
-  "Sanatorio Modelo",
-  "Centro Médico San Lucas",
-  "Clínica del Sol",
-  "Hospital Privado Central",
-  "Sanatorio Belgrano",
-  "Centro de Salud Integral",
-  "Clínica Santa María",
-  "Instituto Médico del Sur",
-  "Clínica Regional",
+  "Clínica Mitre", "Sanatorio Modelo", "Centro Médico San Lucas", "Clínica del Sol",
+  "Hospital Privado Central", "Sanatorio Belgrano", "Centro de Salud Integral",
+  "Clínica Santa María", "Instituto Médico del Sur", "Clínica Regional",
 ];
 
-// Función para generar CUIT de 11 dígitos
 function generarCUIT() {
-  // Genera un CUIT simple de 11 dígitos
   let cuit = "";
   for (let i = 0; i < 11; i++) {
     cuit += Math.floor(Math.random() * 10);
@@ -205,34 +85,27 @@ function generarCUIT() {
   return cuit;
 }
 
-// Función para generar matrícula (letras + números)
 function generarMatricula() {
   const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   let matricula = "";
-
-  // 2-3 letras seguidas de 4-6 números
-  const numLetras = Math.floor(Math.random() * 2) + 2; // 2 o 3 letras
-  const numDigitos = Math.floor(Math.random() * 3) + 4; // 4, 5 o 6 números
+  const numLetras = Math.floor(Math.random() * 2) + 2;
+  const numDigitos = Math.floor(Math.random() * 3) + 4;
 
   for (let i = 0; i < numLetras; i++) {
     matricula += letras.charAt(Math.floor(Math.random() * letras.length));
   }
-
   for (let i = 0; i < numDigitos; i++) {
     matricula += Math.floor(Math.random() * 10);
   }
-
   return matricula;
 }
 
-// Función para generar teléfono
 function generarTelefono() {
-  const codigo = Math.floor(Math.random() * 900) + 100; // 3 dígitos
-  const numero = Math.floor(Math.random() * 9000000) + 1000000; // 7 dígitos
+  const codigo = Math.floor(Math.random() * 900) + 100;
+  const numero = Math.floor(Math.random() * 9000000) + 1000000;
   return `+54 ${codigo} ${numero}`;
 }
 
-// Función para generar email profesional
 function generarEmailProfesional(nombres, apellidos, especialidad) {
   const nombre = nombres.toLowerCase().replace(/\s+/g, "");
   const apellido = apellidos.toLowerCase().replace(/\s+/g, "");
@@ -247,11 +120,9 @@ function generarEmailProfesional(nombres, apellidos, especialidad) {
     `${apellido}${especialidadCorta}@${dominio}`,
     `dr${apellido}@${dominio}`,
   ];
-
   return opciones[Math.floor(Math.random() * opciones.length)];
 }
 
-// Función para generar dirección
 function generarDireccion() {
   const calle = calles[Math.floor(Math.random() * calles.length)];
   const numero = Math.floor(Math.random() * 9999) + 1;
@@ -259,12 +130,10 @@ function generarDireccion() {
   return `${calle} ${numero}${piso}`;
 }
 
-// Función para generar contraseña simple
 function generarPassword() {
   return `medico${Math.floor(Math.random() * 9999) + 1000}`;
 }
 
-// Función para generar prestadores
 function generarPrestadores(cantidad) {
   const prestadores = [];
   const cuitsUsados = new Set();
@@ -273,13 +142,11 @@ function generarPrestadores(cantidad) {
   for (let i = 0; i < cantidad; i++) {
     let cuit, matricula;
 
-    // Generar CUIT único
     do {
       cuit = generarCUIT();
     } while (cuitsUsados.has(cuit));
     cuitsUsados.add(cuit);
 
-    // Generar matrícula única
     do {
       matricula = generarMatricula();
     } while (matriculasUsadas.has(matricula));
@@ -287,12 +154,10 @@ function generarPrestadores(cantidad) {
 
     const nombre = nombres[Math.floor(Math.random() * nombres.length)];
     const apellido = apellidos[Math.floor(Math.random() * apellidos.length)];
-    const esCentroMedico = Math.random() > 0.85; // 15% chance de ser centro médico
+    const esCentroMedico = Math.random() > 0.85; // 15% chance
 
-    // Generar especialidades según tipo
     let especialidadesPrestador;
     if (esCentroMedico) {
-      // Centros médicos: 3-6 especialidades aleatorias
       const numEspecialidades = Math.floor(Math.random() * 4) + 3; // 3-6
       const especialidadesSet = new Set();
       while (especialidadesSet.size < numEspecialidades && especialidadesSet.size < especialidades.length) {
@@ -301,18 +166,15 @@ function generarPrestadores(cantidad) {
       }
       especialidadesPrestador = Array.from(especialidadesSet);
     } else {
-      // Médicos: 1 especialidad (puede expandirse a 1-2 en el futuro)
       const especialidad = especialidades[Math.floor(Math.random() * especialidades.length)];
       especialidadesPrestador = [especialidad];
     }
 
-    // Para centros médicos usar nombres de clínicas, para médicos usar nombres de personas
     let nombrePrestador, apellidoPrestador, emailPrestador;
     if (esCentroMedico) {
       const nombreClinica = nombresClinicas[Math.floor(Math.random() * nombresClinicas.length)];
       nombrePrestador = nombreClinica;
       apellidoPrestador = "";
-      // Email profesional para clínica
       const clinicaCorta = nombreClinica.toLowerCase().replace(/\s+/g, "").replace(/clínica|sanatorio|centro|hospital|instituto/gi, "");
       emailPrestador = `info@${clinicaCorta}.com.ar`;
     } else {
@@ -339,11 +201,38 @@ function generarPrestadores(cantidad) {
 
     prestadores.push(prestador);
   }
-
   return prestadores;
 }
 
-// Función principal
+function generarSedesParaCentro(centroId, nombreCentro) {
+  const sedesData = [];
+  const numSedes = Math.floor(Math.random() * 3) + 1; // 1 a 3 sedes
+
+  for (let i = 0; i < numSedes; i++) {
+    const ciudadSede = ciudades[Math.floor(Math.random() * ciudades.length)];
+    const provinciaSede = provincias[Math.floor(Math.random() * provincias.length)];
+
+    sedesData.push({
+      nombre: `Sede ${nombreCentro} - ${ciudadSede} #${i + 1}`,
+      direccion: generarDireccion(),
+      ciudad: ciudadSede,
+      provincia: provinciaSede,
+      telefono: generarTelefono(),
+      email: `sede${i + 1}-${centroId}@mail.com`,
+      horario_apertura: "08:00",
+      horario_cierre: "20:00",
+      centro_medico_id: centroId,
+      estado: "activa",
+    });
+  }
+  return sedesData;
+}
+
+
+// =========================================================================
+// FUNCIÓN PRINCIPAL DE POBLACIÓN
+// =========================================================================
+
 async function poblarPrestadores() {
   try {
     // Conectar a MongoDB
@@ -354,19 +243,21 @@ async function poblarPrestadores() {
 
     console.log("✅ Conectado a MongoDB");
 
-    // Limpiar colección existente (opcional)
-    console.log("🧹 Limpiando colección de prestadores...");
+    // Limpiar colecciones
+    console.log("🧹 Limpiando colecciones de Prestadores y Sedes...");
     await PrestadorModel.deleteMany({});
+    await SedeModel.deleteMany({});
+    console.log("🧹 Colecciones limpias.");
 
-    // Generar prestadores
+    // Generar y crear prestadores
     const cantidadPrestadores = 30;
     console.log(`🏥 Generando ${cantidadPrestadores} prestadores...`);
-    const prestadores = generarPrestadores(cantidadPrestadores);
+    const prestadoresAInsertar = generarPrestadores(cantidadPrestadores);
 
-    // Crear prestadores en la base de datos
-    for (let i = 0; i < prestadores.length; i++) {
-      const prestador = prestadores[i];
+    const prestadoresCreados = [];
+    for (const prestador of prestadoresAInsertar) {
       const prestadorCreado = await PrestadorModel.create(prestador);
+      prestadoresCreados.push(prestadorCreado);
 
       const tipo = prestador.es_centro_medico ? "Centro Médico" : "Médico";
       const nombreCompleto = prestador.es_centro_medico
@@ -377,21 +268,62 @@ async function poblarPrestadores() {
         `✅ ${tipo} creado: ${nombreCompleto} - [${especialidadesStr}] (CUIT: ${prestadorCreado.cuit})`
       );
     }
+    
+    // Separar centros médicos y médicos individuales
+    const centrosMedicos = prestadoresCreados.filter(p => p.es_centro_medico);
+    const medicosIndividuales = prestadoresCreados.filter(p => !p.es_centro_medico);
+
+    // ---------------------------------------------------
+    // PASO 1: CREACIÓN Y ASIGNACIÓN DE SEDES A CENTROS MÉDICOS
+    // ---------------------------------------------------
+    console.log("\n🏢 Creando sedes para los Centros Médicos...");
+    
+    for (const centro of centrosMedicos) {
+      const sedesData = generarSedesParaCentro(centro._id, centro.nombres);
+      const sedesCreadas = await SedeModel.insertMany(sedesData);
+      const sedeIds = sedesCreadas.map(s => s._id);
+
+      // Asignar sedes al campo 'sedes' del centro médico
+      await PrestadorModel.findByIdAndUpdate(centro._id, {
+        $set: { sedes: sedeIds },
+      });
+
+      console.log(
+        `   ✅ Centro '${centro.nombres}' actualizado con ${sedesCreadas.length} sede(s).`
+      );
+    }
+    
+    // ---------------------------------------------------
+    // PASO 2: ASIGNACIÓN DE MÉDICOS A medicosQueTrabajan EN CENTROS
+    // ---------------------------------------------------
+    console.log("\n👨‍⚕️ Asignando médicos a los centros (medicosQueTrabajan)...");
+
+    for (const centro of centrosMedicos) {
+      // Tomar un subconjunto aleatorio de médicos individuales (entre 1 y 5)
+      const numMedicos = Math.floor(Math.random() * 5) + 1; 
+      const medicosAsignados = medicosIndividuales
+        .sort(() => 0.5 - Math.random()) // Aleatorizar
+        .slice(0, numMedicos)
+        .map(m => m._id); // Obtener solo los IDs
+
+      // Asignar los IDs al campo 'medicosQueTrabajan' del centro
+      await PrestadorModel.findByIdAndUpdate(centro._id, {
+        $set: { medicosQueTrabajan: medicosAsignados },
+      });
+
+      console.log(
+        `   ✅ Centro '${centro.nombres}' asignado a ${medicosAsignados.length} médicos.`
+      );
+    }
+
 
     console.log(`\n🎉 ¡Proceso completado exitosamente!`);
-    console.log(`📊 Se crearon ${cantidadPrestadores} prestadores.`);
-    console.log(`🏥 Especialidades cubiertas: ${especialidades.length}`);
+    console.log(`📊 Se crearon ${prestadoresCreados.length} prestadores y ${centrosMedicos.length} centros con sedes.`);
 
-    // Mostrar estadísticas
-    const centrosMedicos = prestadores.filter((p) => p.es_centro_medico).length;
-    const medicosIndividuales = prestadores.length - centrosMedicos;
-
-    console.log(`👨‍⚕️ Médicos individuales: ${medicosIndividuales}`);
-    console.log(`🏢 Centros médicos: ${centrosMedicos}`);
   } catch (error) {
     console.error("❌ Error al poblar prestadores:", error);
     if (error.code === 11000) {
-      console.error("💡 Error de duplicado: CUIT o matrícula ya existe");
+      console.error("💡 Error de duplicado: CUIT o matrícula ya existe. Intenta correr el script de nuevo.");
     }
   } finally {
     // Cerrar la conexión

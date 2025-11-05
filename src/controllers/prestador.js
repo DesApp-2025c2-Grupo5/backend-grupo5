@@ -2,7 +2,6 @@ const Prestador = require('../models/prestador');
 const { generateToken } = require('../utils/jwt');
 
 // Normaliza el CUIT: elimina todo lo que no sea dígito.
-// No completa con ceros a la izquierda para evitar falsos positivos.
 function normalizarCUIT(valor) {
     if (valor === undefined || valor === null) return '';
     return String(valor).replace(/\D/g, '');
@@ -17,7 +16,14 @@ exports.loginPrestador = async (req, res) => {
         if (cuitNormalizado.length !== 11) {
             return res.status(400).json({ message: 'CUIT inválido. Debe tener 11 dígitos.' });
         }
-        const prestador = await Prestador.findOne({ cuit: cuitNormalizado });
+        
+        const prestador = await Prestador.findOne({ cuit: cuitNormalizado })
+                                         .populate({ 
+                                            path: 'medicosQueTrabajan', 
+                                            select: '_id nombres apellidos' 
+                                         }) 
+                                         .populate('sedes'); 
+
         if (!prestador) {
             return res.status(401).json({ message: 'CUIT incorrecto' });
         }
@@ -34,14 +40,18 @@ exports.loginPrestador = async (req, res) => {
             message: 'Inicio de sesión exitoso', 
             accessToken, 
             prestador: {
-            _id: prestador._id,
-            nombres: prestador.nombres,
-            apellidos: prestador.apellidos,
-            especialidad: prestador.especialidad,
-            cuit: prestador.cuit,
-            matricula: prestador.matricula,
-            es_centro_medico: prestador.es_centro_medico,
-        } });
+                _id: prestador._id,
+                nombres: prestador.nombres,
+                apellidos: prestador.apellidos,
+                especialidad: prestador.especialidades?.[0] || '', 
+                cuit: prestador.cuit,
+                matricula: prestador.matricula,
+                es_centro_medico: prestador.es_centro_medico,
+                
+                medicosQueTrabajan : prestador.medicosQueTrabajan,
+                sedes: prestador.sedes 
+            } 
+        });
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
         res.status(500).json({ message: error.message || "Error interno del servidor" });
